@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>주문 정보 API 테스트 페이지</title>
+</head>
+<body>
+    <h1>주문 정보 API 테스트</h1>
+
+    <h2>모든 주문 정보 조회</h2>
+    <button onclick="fetchAllOrders()">모든 주문 정보 가져오기</button>
+    <div id="all-orders-display"></div>
+
+    <h2>특정 주문 ID로 주문 정보 조회</h2>
+    <label for="orderIdInput">주문 ID:</label>
+    <input type="text" id="orderIdInput" value="ORDER-001">
+    <button onclick="fetchOrderById()">주문 정보 가져오기</button>
+    <div id="order-by-id-display"></div>
+
+    <script>
+        const apiEndpoint = '/api/orders'; // API 엔드포인트 주소 (app.js와 동일)
+
+        async function fetchAllOrders() {
+            const response = await fetch(apiEndpoint);
+            const orders = await response.json();
+
+            let ordersHTML = '<h3>모든 주문 목록</h3><ul>';
+            orders.forEach(order => {
+                ordersHTML += `<li>주문 ID: ${order.orderId}, 고객 이름: ${order.customerName}, 주문 상태: ${order.orderStatus}</li>`;
+            });
+            ordersHTML += '</ul>';
+            document.getElementById('all-orders-display').innerHTML = ordersHTML;
+        }
+
+        async function fetchOrderById() {
+            const orderId = document.getElementById('orderIdInput').value;
+            const response = await fetch(`${apiEndpoint}/${orderId}`);
+            if (response.status === 200) {
+                const order = await response.json();
+                let orderHTML = '<h3>주문 상세 정보</h3><ul>';
+                orderHTML += `<li>주문 ID: ${order.orderId}</li>`;
+                orderHTML += `<li>고객 이름: ${order.customerName}</li>`;
+                orderHTML += `<li>주문 날짜: ${order.orderDate}</li>`;
+                orderHTML += `<li>주문 상태: ${order.orderStatus}</li>`;
+                orderHTML += '<li>주문 상품:<ul>';
+                order.items.forEach(item => {
+                    orderHTML += `<li>${item.productName} (${item.quantity}개)</li>`;
+                });
+                orderHTML += '</ul></li></ul>';
+                document.getElementById('order-by-id-display').innerHTML = orderHTML;
+
+            } else {
+                const error = await response.json();
+                document.getElementById('order-by-id-display').innerHTML = `<p style="color: red;">에러: ${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
