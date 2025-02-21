@@ -1,6 +1,4 @@
-```markdown
-
-Copilot Studio Custom Connector 를 활용한 주문 정보 관리 챗봇 개발 가이드 (초보자용)
+# Copilot Studio Custom Connector 를 활용한 주문 정보 관리 챗봇 개발 가이드 (초보자용)
 1. 개발 환경 준비
 1.1. 필수 프로그램 설치
 Visual Studio Code (VS Code): 코드 편집기 (https://code.visualstudio.com/)
@@ -20,23 +18,22 @@ Prettier - Code formatter: 코드 자동 포맷팅
 2.1. package.json 파일 생성
 VS Code 터미널을 열고 (터미널 > 새 터미널), 프로젝트 폴더 (order-management-app) 에서 다음 명령어를 실행하여 package.json 파일을 생성합니다.
 
-Bash
-
+```Bash
 npm init -y
+```
 package.json 파일은 Node.js 프로젝트의 설정 파일이며, 프로젝트 정보, 의존성 모듈 정보 등을 관리합니다.
 2.2. Express 모듈 설치
 VS Code 터미널에서 다음 명령어를 실행하여 웹 서버 구축에 필요한 express 모듈을 설치합니다.
 
-Bash
-
+```Bash
 npm install express
+```
 express 모듈은 Node.js 환경에서 웹 서버 및 REST API 를 쉽게 구축할 수 있도록 도와주는 프레임워크입니다.
 node_modules 폴더가 생성되고, package.json 파일의 dependencies 항목에 express 모듈 정보가 추가됩니다.
 2.3. app.js 파일 생성 및 코드 작성 (API 서버)
 VS Code 탐색기에서 order-management-app 폴더에 app.js 파일을 생성하고, 다음 코드를 복사하여 붙여넣습니다.
 
-JavaScript
-
+```JavaScript
 // app.js
 const express = require('express');
 const app = express();
@@ -61,6 +58,7 @@ app.get('/api/orders/:orderId', (req, res) => {
 app.listen(port, () => {
   console.log(`Node.js 웹 애플리케이션이 http://localhost:${port} 에서 실행 중입니다.`);
 });
+```
 코드 설명:
 const express = require('express');: express 모듈을 import 합니다.
 const app = express();: express 애플리케이션 객체를 생성합니다.
@@ -72,7 +70,7 @@ app.listen(port, ...): 웹 서버를 port (3000번) 포트에서 실행하고, �
 2.4. demo-db.js 파일 생성 및 코드 작성 (데이터베이스)
 VS Code 탐색기에서 order-management-app 폴더에 demo-db.js 파일을 생성하고, 다음 코드를 복사하여 붙여넣습니다.
 
-JavaScript
+```JavaScript
 
 // demo-db.js
 const orders = [
@@ -108,13 +106,14 @@ const orders = [
 ];
 
 module.exports = { orders };
+```
 코드 설명:
 const orders = [...]: 3개의 주문 정보를 담고 있는 JSON 배열 orders 를 정의합니다. 각 주문 정보는 주문 ID, 고객 이름, 주문 날짜, 주문 상태, 주문 상품 목록 (items 배열) 을 포함합니다.
 module.exports = { orders };: orders 배열을 외부 모듈에서 사용할 수 있도록 export 합니다. (app.js 에서 require('./demo-db') 로 import 하여 사용)
 2.5. index.html 파일 생성 및 코드 작성 (OpenAPI 테스트 페이지)
 VS Code 탐색기에서 order-management-app 폴더에 index.html 파일을 생성하고, 다음 코드를 복사하여 붙여넣습니다.
 
-HTML
+```HTML
 
 <!DOCTYPE html>
 <html>
@@ -174,6 +173,7 @@ HTML
     </script>
 </body>
 </html>
+```
 코드 설명:
 HTML: 간단한 HTML 폼을 구성하여, "모든 주문 정보 조회" 및 "특정 주문 ID로 주문 정보 조회" 기능을 테스트할 수 있는 버튼과 결과를 표시할 영역 (div) 을 제공합니다.
 JavaScript:
@@ -194,13 +194,14 @@ API 엔드포인트 직접 호출:
 3.1. Swagger UI Express 및 swagger-jsdoc 모듈 설치
 VS Code 터미널에서 프로젝트 디렉토리 (order-management-app) 로 이동한 후, 다음 명령어를 실행하여 swagger-ui-express 및 swagger-jsdoc 모듈을 설치합니다.
 
-Bash
+```Bash
 
 npm install swagger-ui-express swagger-jsdoc
+```
 3.2. app.js 파일 수정 - Swagger UI 설정 및 API 문서 주석 추가
 app.js 파일을 열고, 다음과 같이 코드를 수정합니다.
 
-JavaScript
+```JavaScript
 
 // app.js
 const express = require('express');
@@ -327,6 +328,7 @@ app.get('/api/orders/:orderId', (req, res) => {
 app.listen(port, () => {
   console.log(`Node.js 웹 애플리케이션이 http://localhost:${port} 에서 실행 중입니다.`);
 });
+```
 코드 설명:
 swagger-ui-express, swagger-jsdoc 모듈 import 및 설정 코드 추가
 options 객체 설정을 통해 OpenAPI 버전, API 정보, 기본 경로, API 문서 주석 파일 경로 등을 정의합니다.
@@ -375,7 +377,7 @@ Response:
 
 "Definition" 패널에 다음 JSON 스키마를 복사하여 붙여넣습니다.
 
-JSON
+```JSON
 
 {
   "type": "array",
@@ -410,6 +412,7 @@ JSON
     ]
   }
 }
+```
 4.5. Definition (액션) 정의 - GetOrder (특정 주문 ID로 주문 정보 조회)
 "New action" 을 다시 클릭합니다.
 General:
@@ -431,7 +434,7 @@ Response:
 
 "Definition" 패널에 다음 JSON 스키마를 복사하여 붙여넣습니다.
 
-JSON
+```JSON
 
 {
   "type": "object",
@@ -463,6 +466,7 @@ JSON
     "items"
   ]
 }
+```
 4.6. Definition (액션) 정의 - GetCustomerName (주문자 이름 조회)
 "New action" 을 다시 클릭합니다.
 General:
@@ -484,7 +488,7 @@ Response:
 
 "Definition" 패널에 다음 JSON 스키마를 복사하여 붙여넣습니다.
 
-JSON
+```JSON
 
 {
   "type": "object",
@@ -499,6 +503,7 @@ JSON
     "customerName"
   ]
 }
+```
 4.7. Test (Custom Connector 테스트)
 "Test" 탭으로 이동합니다.
 GetOrderList Action 테스트: "GetOrderList" Action 을 선택하고 "Test operation" 을 클릭하여 주문 목록이 정상적으로 반환되는지 확인합니다.
